@@ -19,10 +19,11 @@
    <div class="friends-section">
      <div class="friends-block friends-block-first">
        <h2 class="title">Ваши друзья</h2>
-       <div id="results"></div>
+       <ul class="friends-list" id="results"></ul>
      </div>
      <div class="friends-block friends-block-second">
        <h2 class="title">Друзья в списке</h2>
+       <ul class="friends-list" id="filtered_results"></ul>
      </div>
    </div>
    <footer>
@@ -35,15 +36,13 @@
   <script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
 
   <script id="friends_list" type="text/x-handlebars-template">
-    <ul class="friends-list" id="friends">
-      {{#each friends}}
-        <li class="friends-item">
-          <image src="{{photo_50}}" class="friends-item-img">
-          <span class="friends-item-name">{{first_name}} {{last_name}}</span>
-          <a href="#" class="friends-item-link"><i class="fa fa-plus"></i></a>
-        </li>
-      {{/each}}
-    </ul>
+    {{#each friends}}
+      <li class="friends-item" draggable="true">
+        <image src="{{photo_50}}" class="friends-item-img">
+        <span class="friends-item-name">{{first_name}} {{last_name}}</span>
+        <a href="#" class="friends-item-link"><i class="fa fa-plus"></i></a>
+      </li>
+    {{/each}}
   </script>
 </body>
 </html>
