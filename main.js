@@ -3,7 +3,11 @@ var secondSearch = document.getElementById("second_search");
 var results = document.getElementById("results");
 var filtredFriends = document.getElementById("filtered_results");
 var mainFriendsList = [];
-var filtredFriendsArr = [];
+var filtredFriendsList = [];
+var apply = document.getElementById("apply");
+var dragSrcEl = null;
+var firstIdsArr = [];
+var secondIdsArr = [];
 
 new Promise(function(resolve) {
   if(document.readyState === "complete") {
@@ -66,24 +70,93 @@ new Promise(function(resolve) {
           e.preventDefault();
 
           if(e.target.classList[1] === "fa-plus") {
-            moveFriends("fa fa-minus", filtredFriendsArr, filtredFriends);
+            moveFriends("fa fa-remove", filtredFriendsList, firstIdsArr, secondIdsArr, filtredFriends);
+            console.log(firstIdsArr);
           }
-          else if(e.target.classList[1] === "fa-minus") {
-            moveFriends("fa fa-plus", mainFriendsList, results);
+          else if(e.target.classList[1] === "fa-remove") {
+            moveFriends("fa fa-plus", mainFriendsList, secondIdsArr, firstIdsArr, results);
+            console.log(secondIdsArr);
           }
 
-          function moveFriends(newClass, saveArr, showArr) {
+          function moveFriends(newClass, saveArr, addIdArr, removeIdArr, showArr) {
+            var li = e.target.closest(".friends-item");
+            var liId = e.target.closest(".friends-item").getAttribute("data-id");
+
             e.target.setAttribute("class", newClass);
-            saveArr.push(e.target.closest(".friends-item"));
-
-            showArr.appendChild(e.target.closest(".friends-item"));
+            saveArr.push(li);
+            addIdArr.push(li.getAttribute("data-id"));
+            removeIdArr.filter(function(val){
+              if(val === liId) {
+                removeIdArr.splice(removeIdArr.indexOf(val), removeIdArr.indexOf(val));
+              }
+            });
+            showArr.appendChild(li);
           }
+        });
+
+        function dragItem(e){
+          // e.preventDefault();
+
+          e.target.dataTransfer.effectAllowed = "move";
+          e.target.dataTransfer.setData("text/html", e.target.getAttribute("id"));
+        }
+        function dragOverItem(e){
+          e.target.preventDefault();
+
+          dragSrcEl = this;
+        }
+        function dragEnterItem(e){
+          e.preventDefault();
+
+          return true;
+        }
+        function dragLeaveItem(e){
+          // e.preventDefault();
+        }
+        function dropItem(e){
+          e.target.appendChild(document.getElementById(e.dataTransfer.getData("text/html")));
+
+          e.stopPropagation();
+          return false;
+        }
+        function dropEndItem(e){
+          // e.preventDefault();
+        }
+
+        results.addEventListener("dragstart", dragItem);
+        filtredFriends.addEventListener("drop", dropItem);
+        // item.addEventListener("dragstart", dragItem);
+        // item.addEventListener("dragover", dragOverItem);
+        // item.addEventListener("dragenter", dragEnterItem);
+        // item.addEventListener("dragleave", dragLeaveItem);
+        // item.addEventListener("drop", dropItem);
+        // item.addEventListener("dropend", dropEndItem);
+
+        apply.addEventListener("click", function(e) {
+          e.preventDefault();
+
+          localStorage.setItem("mainList", JSON.stringify(mainFriendsList));
+          console.log(mainFriendsList);
+          localStorage.setItem("filteredList", JSON.stringify(filtredFriendsList));
+          console.log(filtredFriendsList);
+        });
+
+        window.addEventListener("load", function() {
+          // if (localStorage.filteredList) {
+          //   var filtredRes = JSON.parse(localStorage.getItem("filteredList"));
+          //   var mainRes = JSON.parse(localStorage.getItem("mainList"));
+          //   console.log(filtredRes);
+          //
+          //   for (var i=0; i<filtredRes.length; i++) {
+          //     console.log(filtredRes[i]);
+          //   }
+          // }
         });
 
         results.innerHTML= template;
         resolve();
       }
-    })
+    });
   });
 }).catch(function(e) {
     console.log("Ошибка: " + e.message);

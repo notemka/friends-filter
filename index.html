@@ -27,7 +27,7 @@
      </div>
    </div>
    <footer>
-     <button>Сохранить</button>
+     <button id="apply">Сохранить</button>
    </footer>
  </div>
 
@@ -37,7 +37,7 @@
 
   <script id="friends_list" type="text/x-handlebars-template">
     {{#each friends}}
-      <li class="friends-item" draggable="true">
+      <li class="friends-item" draggable="true" data-id="{{user_id}}" id="{{user_id}}">
         <image src="{{photo_50}}" class="friends-item-img">
         <span class="friends-item-name">{{first_name}} {{last_name}}</span>
         <a href="#" class="friends-item-link"><i class="fa fa-plus"></i></a>
